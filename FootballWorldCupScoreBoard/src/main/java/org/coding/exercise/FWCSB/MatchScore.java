@@ -2,6 +2,15 @@ package org.coding.exercise.FWCSB;
 
 public class MatchScore {
 
+    public MatchScore(int scoreHome, int scoreAway){
+        this.scoreHome = scoreHome;
+        this.scoreAway = scoreAway;
+    }
+    public MatchScore(){
+        this.scoreHome = 0;
+        this.scoreAway = 0;
+    }
+
     int scoreHome;
     int scoreAway;
 

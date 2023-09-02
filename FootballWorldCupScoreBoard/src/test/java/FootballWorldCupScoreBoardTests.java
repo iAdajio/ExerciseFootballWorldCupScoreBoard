@@ -1,6 +1,4 @@
-import org.coding.exercise.FWCSB.FootballMatch;
-import org.coding.exercise.FWCSB.MatchScore;
-import org.coding.exercise.FWCSB.ScoreBoardService;
+import org.coding.exercise.FWCSB.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,9 +16,9 @@ public class FootballWorldCupScoreBoardTests {
     @Test
     void testStartGame() {
         ScoreBoardService sbs = new ScoreBoardService();
-        FootballMatch fbm = new FootballMatch();
+        FootballMatch fbm = new FootballMatch("Spain","Brazil");
         sbs.startGame(fbm);
-        assertEquals(fbm,sbs.getCurrentGame());
+        assertTrue(sbs.isPlayingById(fbm.getId()));
     }
 
     /**
@@ -29,9 +27,9 @@ public class FootballWorldCupScoreBoardTests {
     @Test
     void testFinnish() {
         ScoreBoardService sbs = new ScoreBoardService();
-        FootballMatch fbm = new FootballMatch();
-        sbs.finishGame();
-        assertNull(sbs.getCurrentGame());// if game ends, then there should be no active game
+        FootballMatch fbm = new FootballMatch("Spain","Brazil");
+        sbs.finishGameById(fbm.getId());
+        assertTrue(sbs.isFinishedById(fbm.getId()));
     }
 
     /**
@@ -40,13 +38,11 @@ public class FootballWorldCupScoreBoardTests {
     @Test
     void testUpdateScore() {
         ScoreBoardService sbs = new ScoreBoardService();
-        FootballMatch fbm = new FootballMatch();
+        FootballMatch fbm = new FootballMatch("Spain","Brazil");
         sbs.startGame(fbm);
-        MatchScore ms = new MatchScore();
-        ms.setScoreAway(1);
-        ms.setScoreAway(1);
-        sbs.updateScore(ms);
-        assertEquals(ms,sbs.getCurrentScore());
+        sbs.updateScoreById(fbm.getId(),1,0);
+        IFootballMatch fbm2 = sbs.getGameById(fbm.getId());
+        assertEquals(1,fbm2.getMatchScore().getScoreHome() + fbm2.getMatchScore().getScoreAway());
     }
 
     /**
@@ -55,7 +51,19 @@ public class FootballWorldCupScoreBoardTests {
     @Test
     void testGetSummary() {
         ScoreBoardService sbs = new ScoreBoardService();
-        FootballMatch fbm = new FootballMatch();
+
+        FootballMatch fbm1 = new FootballMatch(TeamName.MEXICO.name(), TeamName.CANADA.name());
+        FootballMatch fbm2 = new FootballMatch(TeamName.SPAIN.name(), TeamName.BRAZIL.name());
+        FootballMatch fbm4 = new FootballMatch(TeamName.GERMANY.name(), TeamName.FRANCE.name());
+        FootballMatch fbm3 = new FootballMatch(TeamName.URUGUAY.name(), TeamName.ITALY.name());
+        FootballMatch fbm5 = new FootballMatch(TeamName.ARGENTINA.name(), TeamName.AUSTRALIA.name());
+
+        sbs.updateScoreById(fbm1.getId(),0,5);
+        sbs.updateScoreById(fbm2.getId(),10,2);
+        sbs.updateScoreById(fbm3.getId(),2,2);
+        sbs.updateScoreById(fbm4.getId(),6,6);
+        sbs.updateScoreById(fbm5.getId(),3,1);
+
         String expectedSummary = """
                 Uruguay 6 - Italy 6
                 Spain 10 - Brazil 2

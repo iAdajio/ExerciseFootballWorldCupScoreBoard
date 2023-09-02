@@ -2,59 +2,34 @@ package org.coding.exercise.FWCSB;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ScoreBoardService {
-
-    List<IFootballMatch> gamesPlayed = new ArrayList<IFootballMatch>();
-
-
-
-    IFootballMatch currentGame = null;
-
-
-
-    MatchScore currentScore = null;
-
+    HashMap<String,IFootballMatch> gamesPlayed = new HashMap<String, IFootballMatch>();
+    HashMap<String,IFootballMatch> gamesPlaying = new HashMap<String, IFootballMatch>();
     public ScoreBoardService(){
 
     }
-
-    public void startGame(IFootballMatch game){
+    public void startGame(IFootballMatch footballMatch){
         throw new UnsupportedOperationException("Not implemented");
     }
-    public void updateScore(MatchScore ms){
+    public MatchScore updateScoreById(int id, int scoreHome, int scoreAway){
         throw new UnsupportedOperationException("Not implemented");
     }
-    public void finishGame(){
+    public void finishGameById(int id){
         throw new UnsupportedOperationException("Not implemented");
     }
     public String getGameSummary(){
         throw new UnsupportedOperationException("Not implemented");
     }
-
-    /**
-     * Getter
-     * @return get list of games played
-     */
-    public List<IFootballMatch> getGamesPlayed() {
-        return gamesPlayed;
+    public boolean isPlayingById(int id){
+        throw new UnsupportedOperationException("Not implemented");
     }
-
-    /**
-     * Getter
-     * @return get the current game
-     */
-    public IFootballMatch getCurrentGame() {
-        return currentGame;
+    public boolean isFinishedById(int id){
+        throw new UnsupportedOperationException("Not implemented");
     }
-
-    /**
-     * Getter
-     * @return get the current game score
-     */
-    public MatchScore getCurrentScore() {
-        return currentScore;
+    public IFootballMatch getGameById(int id){
+        throw new UnsupportedOperationException("Not implemented");
     }
-
 }

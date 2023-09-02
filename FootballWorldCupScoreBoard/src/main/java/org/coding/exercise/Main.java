@@ -7,7 +7,7 @@ public class Main {
         System.out.println("Hello world!");
 
 
-        FootballMatch fb = new FootballMatch();
+        //FootballMatch fb = new FootballMatch();
 
 
 
