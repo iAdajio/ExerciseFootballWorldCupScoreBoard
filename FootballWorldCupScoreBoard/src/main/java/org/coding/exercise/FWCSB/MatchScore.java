@@ -13,20 +13,25 @@ public class MatchScore {
 
     int scoreHome;
     int scoreAway;
+    int totalScore;
 
     public int getScoreHome() {
         return scoreHome;
     }
 
-    public void setScoreHome(int scoreHome) {
+    public MatchScore setScoreHome(int scoreHome) {
         this.scoreHome = scoreHome;
+        this.totalScore = this.scoreHome + this.scoreAway;
+        return this;
     }
 
     public int getScoreAway() {
         return scoreAway;
     }
 
-    public void setScoreAway(int scoreAway) {
+    public MatchScore setScoreAway(int scoreAway) {
         this.scoreAway = scoreAway;
+        this.totalScore = this.scoreHome + this.scoreAway;
+        return this;
     }
 }
