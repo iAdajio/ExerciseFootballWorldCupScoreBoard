@@ -1,2 +1,0 @@
-# ExerciseFootballWorldCupScoreBoard
-Coding Interview Execise
