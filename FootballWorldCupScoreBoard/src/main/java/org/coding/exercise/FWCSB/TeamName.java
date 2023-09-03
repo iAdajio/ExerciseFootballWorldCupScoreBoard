@@ -10,7 +10,9 @@ public enum TeamName {
     CANADA("Canada"),
     ARGENTINA("Argentina"),
     GERMANY("Germany"),
-    FRANCE("France");
+    FRANCE("France"),
+    ENGLAND("England"),
+    NETHERLANDS("Netherlands");
 
     public final String label;
 

@@ -1,18 +1,13 @@
 package org.coding.exercise.FWCSB;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IDataService {
 
-    /**
-     * Only to be used for development purposes
-     * @return data source List
-     */
-    Map<String,IFootballMatch> getAll();
+    List<IFootballMatch> getAllActive();
     IFootballMatch getById(int id);
-
-    void add(IFootballMatch object);
-
+    void add(IFootballMatch footballMatch);
     boolean hasById(int id);
 
 }
