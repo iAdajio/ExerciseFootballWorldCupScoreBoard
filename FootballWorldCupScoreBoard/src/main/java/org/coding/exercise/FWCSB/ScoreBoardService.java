@@ -3,33 +3,65 @@ package org.coding.exercise.FWCSB;
 
 import java.util.*;
 
+/**
+ * This class represents the Score Board.
+ * It's main features are:
+ * > Start football games
+ * > Update football game scores
+ * > Finish football games
+ * > Get summary of active football games
+ */
 public class ScoreBoardService {
-    Map<String,IFootballMatch> gamesPlayed = new HashMap<String, IFootballMatch>();
-    Map<String,IFootballMatch> gamesPlaying = new HashMap<String, IFootballMatch>();
-    public ScoreBoardService(){
+    private static ScoreBoardService INSTANCE;
+    public static ScoreBoardService instance(){
+        if(INSTANCE == null) {
+            INSTANCE = new ScoreBoardService();
+        }
+        return INSTANCE;
+    }
+    public static void reset(){
+        INSTANCE = new ScoreBoardService();
+    }
+
+    // Implementing the Proxy java Pattern similar to dependency injection
+    IDataService dataService = new GameDataSource();
+
+    /**
+     * Use instance() to get the object instance
+     */
+    private ScoreBoardService(){
 
     }
-    public void startGame(IFootballMatch footballMatch){
-        gamesPlaying.put(String.valueOf(footballMatch.getId()),footballMatch);
-    }
-    public boolean updateScoreById(int id, int scoreHome, int scoreAway){
-        if(!gamesPlaying.containsKey(String.valueOf(id))){
+    public boolean startGame(IFootballMatch footballMatch){
+        if(dataService.hasById(footballMatch.getId())){
             return false;
         }
-        gamesPlaying.get(String.valueOf(id)).getMatchScore().setScoreHome(scoreHome).setScoreAway(scoreAway);
+        // Check if the is already a game with the same team names. This is to avoid duplicate entries
+        for(Map.Entry<String, IFootballMatch> set: dataService.getAll().entrySet()){
+            if(set.getValue().equals(footballMatch)){
+                return false;
+            }
+        }
+        dataService.add(footballMatch);
+        return true;
+    }
+    public boolean updateScoreById(int id, int scoreHome, int scoreAway){
+        if(!dataService.hasById(id)){
+            return false;
+        }
+        dataService.getById(id).getMatchScore().setScoreHome(scoreHome).setScoreAway(scoreAway);
         return true;
     }
     public boolean finishGameById(int id){
-        if(!gamesPlaying.containsKey(String.valueOf(id))){
+        if(!dataService.hasById(id)){
             return false;
         }
-        gamesPlayed.put(String.valueOf(id),gamesPlaying.get(String.valueOf(id)));
-        gamesPlaying.remove(String.valueOf(id));
+        dataService.getById(id).setActive(false);
         return true;
     }
     public String getGameSummary(){
         ArrayList<IFootballMatch> orderList = new ArrayList<>();
-        for(Map.Entry<String, IFootballMatch> set :gamesPlaying.entrySet()){
+        for(Map.Entry<String, IFootballMatch> set: dataService.getAll().entrySet()){
             orderList.add(set.getValue());
         }
         orderList.sort(new SortGames());
@@ -48,7 +80,10 @@ public class ScoreBoardService {
         return outputText.toString();
     }
     public boolean isPlayingById(int id){
-        return gamesPlaying.containsKey(String.valueOf(id));
+        if(!dataService.hasById(id)){
+            return false;
+        }
+        return dataService.getById(id).isActive();
     }
 
     /**
@@ -56,13 +91,8 @@ public class ScoreBoardService {
      * @param id
      * @return true if id in gamesPlayed and not in gamesPlaying
      */
-    public boolean isFinishedById(int id){
-        return gamesPlayed.containsKey(String.valueOf(id)) && (!gamesPlaying.containsKey(String.valueOf(id)));
-    }
+
     public IFootballMatch getActiveGameById(int id){
-        if(!gamesPlaying.containsKey(String.valueOf(id))){
-            return null;
-        }
-        return gamesPlaying.get(String.valueOf(id));
+        return dataService.getById(id);
     }
 }

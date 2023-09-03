@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
+/**
+ * Main Test Class
+ */
 public class FootballWorldCupScoreBoardTests {
 
     /*
@@ -15,10 +18,10 @@ public class FootballWorldCupScoreBoardTests {
      */
     @Test
     void testStartGame() {
-        ScoreBoardService sbs = new ScoreBoardService();
+        ScoreBoardService.reset();
         FootballMatch fbm = new FootballMatch(TeamName.SPAIN,TeamName.BRAZIL);
-        sbs.startGame(fbm);
-        assertTrue(sbs.isPlayingById(fbm.getId()));
+        ScoreBoardService.instance().startGame(fbm);
+        assertTrue(ScoreBoardService.instance().isPlayingById(fbm.getId()));
     }
 
     /**
@@ -26,11 +29,11 @@ public class FootballWorldCupScoreBoardTests {
      */
     @Test
     void testFinnish() {
-        ScoreBoardService sbs = new ScoreBoardService();
+        ScoreBoardService.reset();
         FootballMatch fbm = new FootballMatch(TeamName.SPAIN,TeamName.BRAZIL);
-        sbs.startGame(fbm);
-        assertTrue(sbs.finishGameById(fbm.getId()));
-        assertTrue(sbs.isFinishedById(fbm.getId()));
+        ScoreBoardService.instance().startGame(fbm);
+        assertTrue(ScoreBoardService.instance().finishGameById(fbm.getId()));
+        assertFalse(ScoreBoardService.instance().isPlayingById(fbm.getId()));
     }
 
     /**
@@ -38,11 +41,11 @@ public class FootballWorldCupScoreBoardTests {
      */
     @Test
     void testUpdateScore() {
-        ScoreBoardService sbs = new ScoreBoardService();
+        ScoreBoardService.reset();
         FootballMatch fbm = new FootballMatch(TeamName.SPAIN,TeamName.BRAZIL);
-        sbs.startGame(fbm);
-        assertTrue(sbs.updateScoreById(fbm.getId(),1,0));
-        IFootballMatch fbm2 = sbs.getActiveGameById(fbm.getId());
+        ScoreBoardService.instance().startGame(fbm);
+        assertTrue(ScoreBoardService.instance().updateScoreById(fbm.getId(),1,0));
+        IFootballMatch fbm2 = ScoreBoardService.instance().getActiveGameById(fbm.getId());
         assertEquals(1,fbm2.getMatchScore().getScoreHome() + fbm2.getMatchScore().getScoreAway());
     }
 
@@ -51,7 +54,7 @@ public class FootballWorldCupScoreBoardTests {
      */
     @Test
     void testGetSummary() {
-        ScoreBoardService sbs = new ScoreBoardService();
+        ScoreBoardService.reset();
 
         FootballMatch fbm1 = new FootballMatch(TeamName.MEXICO, TeamName.CANADA);
         FootballMatch fbm2 = new FootballMatch(TeamName.SPAIN, TeamName.BRAZIL);
@@ -59,17 +62,17 @@ public class FootballWorldCupScoreBoardTests {
         FootballMatch fbm4 = new FootballMatch(TeamName.URUGUAY, TeamName.ITALY);
         FootballMatch fbm5 = new FootballMatch(TeamName.ARGENTINA, TeamName.AUSTRALIA);
 
-        sbs.startGame(fbm1);
-        sbs.startGame(fbm2);
-        sbs.startGame(fbm3);
-        sbs.startGame(fbm4);
-        sbs.startGame(fbm5);
+        ScoreBoardService.instance().startGame(fbm1);
+        ScoreBoardService.instance().startGame(fbm2);
+        ScoreBoardService.instance().startGame(fbm3);
+        ScoreBoardService.instance().startGame(fbm4);
+        ScoreBoardService.instance().startGame(fbm5);
 
-        sbs.updateScoreById(fbm1.getId(),0,5);
-        sbs.updateScoreById(fbm2.getId(),10,2);
-        sbs.updateScoreById(fbm3.getId(),2,2);
-        sbs.updateScoreById(fbm4.getId(),6,6);
-        sbs.updateScoreById(fbm5.getId(),3,1);
+        ScoreBoardService.instance().updateScoreById(fbm1.getId(),0,5);
+        ScoreBoardService.instance().updateScoreById(fbm2.getId(),10,2);
+        ScoreBoardService.instance().updateScoreById(fbm3.getId(),2,2);
+        ScoreBoardService.instance().updateScoreById(fbm4.getId(),6,6);
+        ScoreBoardService.instance().updateScoreById(fbm5.getId(),3,1);
 
         String expectedSummary = """
                 Uruguay 6 - Italy 6
@@ -79,10 +82,25 @@ public class FootballWorldCupScoreBoardTests {
                 Germany 2 - France 2
                 """;
 
-        assertEquals(expectedSummary,sbs.getGameSummary());
+        assertEquals(expectedSummary,ScoreBoardService.instance().getGameSummary());
     }
 
     /*
-    * Below tests are used to Test additional code
+    * Below tests are used boundary Testing
     * */
+
+    /**
+     * The test must Pass if startGame returns false, indicating that the game is already playing
+     */
+    @Test
+    void testIfGamePlayingAlready() {
+        ScoreBoardService.reset();
+        FootballMatch fbm = new FootballMatch(TeamName.SPAIN,TeamName.BRAZIL);
+        ScoreBoardService.instance().startGame(fbm);
+        FootballMatch duplicate = new FootballMatch(TeamName.SPAIN,TeamName.BRAZIL);
+        assertFalse(ScoreBoardService.instance().startGame(duplicate));// should return false if it is a duplicate game
+        assertFalse(ScoreBoardService.instance().isPlayingById(duplicate.getId()));// should return false, since the duplicate was ignored
+    }
+
+
 }

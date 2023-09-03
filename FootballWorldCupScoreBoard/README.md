@@ -14,3 +14,7 @@ Step:
 > Update a chosen game score with input scores (home,away)
 > Output the summary of active games. Each game output format must be "{teamHome} - {teamAway}: {scoreHome} - {scoreAway}"
 
+
+// Tutorial
+/// Starting a game
+

@@ -8,7 +8,9 @@ public interface IFootballMatch {
     public int getId();
     public String getTeamHome();
     public String getTeamAway();
-
+    public boolean isActive();
+    public void setActive(boolean active);
+    
 
 
 }
